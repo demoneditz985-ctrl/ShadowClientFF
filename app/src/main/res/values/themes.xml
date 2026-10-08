@@ -9,7 +9,6 @@
         <item name="colorSurface">@color/sc_surface</item>
         <item name="colorOnSurface">@color/sc_text</item>
         <item name="colorOnSurfaceVariant">@color/sc_text_dim</item>
-        <item name="colorBackground">@color/sc_black</item>
         <item name="android:colorBackground">@color/sc_black</item>
         <item name="colorOutline">@color/sc_stroke</item>
         <item name="colorError">@color/sc_danger</item>
