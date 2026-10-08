@@ -620,7 +620,8 @@ public class EngineVpnService extends VpnService implements PlatformInterface,
     }
 
     @Override
-    public void connectSSHAgent() {
+    public int connectSSHAgent() {
+        return 0;
     }
 
     @Override
