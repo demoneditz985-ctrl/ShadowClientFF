@@ -26,6 +26,7 @@ import com.shadowclient.ff.auth.KeyManager;
 import com.shadowclient.ff.core.ServerRepo;
 import com.shadowclient.ff.core.ShadowEngine;
 import com.shadowclient.ff.overlay.FloatingIconService;
+import com.shadowclient.ff.util.GameLauncher;
 import com.shadowclient.ff.util.Prefs;
 import com.shadowclient.ff.util.Ui;
 
@@ -86,6 +87,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         chipFF.setOnClickListener(v -> selectGame("FF"));
         chipFFMax.setOnClickListener(v -> selectGame("FFMAX"));
+
+        findViewById(R.id.btnLaunchFF).setOnClickListener(v -> launchGame(GameLauncher.PKG_FF));
+        findViewById(R.id.btnLaunchFFMax).setOnClickListener(v -> launchGame(GameLauncher.PKG_FFMAX));
 
         findViewById(R.id.btnTelegram).setOnClickListener(v -> Ui.openUrl(this, Config.TELEGRAM_URL));
         findViewById(R.id.btnAddServer).setOnClickListener(v -> addServerDialog());
@@ -149,6 +153,13 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     // ------------------------------------------------------------------ game + server
+
+    private void launchGame(String pkg) {
+        if (!GameLauncher.isInstalled(this, pkg)) {
+            Ui.toast(this, getString(R.string.launch_not_installed, GameLauncher.titleFor(pkg)));
+        }
+        GameLauncher.launch(this, pkg);
+    }
 
     private void selectGame(String game) {
         Prefs.set(this, Prefs.KEY_GAME, game);

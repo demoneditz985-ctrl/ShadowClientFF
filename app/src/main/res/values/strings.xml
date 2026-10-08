@@ -64,4 +64,15 @@
     <string name="close">CLOSE</string>
     <string name="sign_out_title">Sign out?</string>
     <string name="sign_out_msg">Your key stays on this device until you sign out. The floating icon will be turned off.</string>
+
+    <!-- Floating menu -->
+    <string name="menu_open_ff">FREE FIRE</string>
+    <string name="menu_open_ffmax">FF MAX</string>
+    <string name="menu_dashboard">DASHBOARD</string>
+    <string name="menu_telegram">TELEGRAM</string>
+    <string name="menu_hide">HIDE FLOATING ICON</string>
+    <string name="menu_note">Tap logo to open · drag to move</string>
+    <string name="dash_launch_ff">OPEN FREE FIRE</string>
+    <string name="dash_launch_ffmax">OPEN FREE FIRE MAX</string>
+    <string name="launch_not_installed">%s is not installed — opening the store page.</string>
 </resources>
