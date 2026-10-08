@@ -75,4 +75,9 @@
     <string name="dash_launch_ff">OPEN FREE FIRE</string>
     <string name="dash_launch_ffmax">OPEN FREE FIRE MAX</string>
     <string name="launch_not_installed">%s is not installed — opening the store page.</string>
+    <string name="node_dialog_hint">Paste the details of YOUR node (from your provider or your own server). Long-press a node in the list to delete it.</string>
+    <string name="node_id_uuid">UUID (VLESS / VMess)</string>
+    <string name="node_id_password">Password (Trojan / Hysteria2)</string>
+    <string name="node_id_ss">Password (Shadowsocks)</string>
+    <string name="node_add_title">Add your node</string>
 </resources>

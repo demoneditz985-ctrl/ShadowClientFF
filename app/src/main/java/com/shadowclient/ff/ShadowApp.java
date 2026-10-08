@@ -5,6 +5,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import com.shadowclient.ff.engine.EngineInstaller;
+
 public class ShadowApp extends Application {
 
     public static final String CH_OVERLAY = "shadow_overlay";
@@ -12,6 +14,7 @@ public class ShadowApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager nm = getSystemService(NotificationManager.class);
             if (nm != null) {
@@ -24,5 +27,8 @@ public class ShadowApp extends Application {
                 nm.createNotificationChannel(c);
             }
         }
+
+        // loads the tunnel engine when one is bundled (see SETUP.md §5)
+        EngineInstaller.install(this);
     }
 }

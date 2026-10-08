@@ -24,6 +24,7 @@ import androidx.core.app.NotificationCompat;
 import com.shadowclient.ff.Config;
 import com.shadowclient.ff.R;
 import com.shadowclient.ff.ShadowApp;
+import com.shadowclient.ff.core.NodeConfig;
 import com.shadowclient.ff.core.ServerRepo;
 import com.shadowclient.ff.core.ShadowEngine;
 import com.shadowclient.ff.ui.DashboardActivity;
@@ -248,7 +249,7 @@ public class FloatingIconService extends Service {
     }
 
     private void pingOnce() {
-        final ServerRepo.Server s = ServerRepo.selected(this);
+        final NodeConfig s = ServerRepo.selected(this);
         if (s == null) return;
         io.execute(() -> {
             final int ms = ServerRepo.ping(s.host, s.port, 2500);
@@ -261,7 +262,7 @@ public class FloatingIconService extends Service {
     }
 
     private void refreshPanel() {
-        ServerRepo.Server s = ServerRepo.selected(this);
+        NodeConfig s = ServerRepo.selected(this);
         if (panelServer != null) {
             panelServer.setText(s == null ? "—" : s.endpoint());
         }

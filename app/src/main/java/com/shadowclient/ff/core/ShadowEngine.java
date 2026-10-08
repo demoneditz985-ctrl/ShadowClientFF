@@ -26,7 +26,7 @@ import android.content.Context;
 public final class ShadowEngine {
 
     public interface Tunnel {
-        void start(Context ctx, ServerRepo.Server server, Listener listener);
+        void start(Context ctx, NodeConfig node, Listener listener);
 
         void stop(Context ctx);
 
@@ -54,12 +54,12 @@ public final class ShadowEngine {
         return tunnel != null && tunnel.isRunning();
     }
 
-    public static void start(Context c, ServerRepo.Server s, Listener l) {
+    public static void start(Context c, NodeConfig node, Listener l) {
         if (tunnel == null) {
             l.onState("ENGINE NOT INSTALLED", "See SETUP.md → Engine plug-in point");
             return;
         }
-        tunnel.start(c, s, l);
+        tunnel.start(c, node, l);
     }
 
     public static void stop(Context c) {
