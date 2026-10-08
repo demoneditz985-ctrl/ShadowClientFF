@@ -57,6 +57,18 @@ jobs:
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
 
+      - name: Publish the APK into dist/
+        if: success()
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/release/*.apk dist/ShadowClient-v1.0.0.apk
+          git config user.name "shadow-ci"
+          git config user.email "shadow-ci@users.noreply.github.com"
+          git add -f dist/ShadowClient-v1.0.0.apk
+          git commit -m "ci: signed Shadow Client v1.0.0 apk [skip ci]" || echo "nothing to update"
+          git pull --rebase --autostash || true
+          git push || true
+
       - name: Publish "latest" release
         if: github.ref == 'refs/heads/main'
         env:
