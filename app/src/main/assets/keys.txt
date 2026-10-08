@@ -1,0 +1,15 @@
+# Shadow Client — extra access keys
+#
+# Format:  KEY|LABEL|EXPIRY|MAX_DEVICES
+#   KEY          the key a user types (case/format insensitive: SHADOW-1234 == shadow1234)
+#   LABEL        short name shown in the dashboard, e.g. the buyer's nickname
+#   EXPIRY       LIFETIME   or   yyyy-MM-dd
+#   MAX_DEVICES  1 = locked to the first device that activates it, 0 = unlimited
+#
+# The owner key "SHADOWCLIENT" is built into the app and does not need a line here.
+# Delete the examples below and add your own.
+#
+# Examples:
+# SC-BETA-0001|BetaTester|2027-01-31|1
+# SC-VIP-0002|VIP-Aman|LIFETIME|1
+# SC-RESELL-10|Reseller-10slots|LIFETIME|10
