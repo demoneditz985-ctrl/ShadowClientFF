@@ -184,7 +184,11 @@ public class EngineVpnService extends VpnService implements PlatformInterface,
         options.setAppMarketingVersion(Config.VERSION);
         options.setOomKillerEnabled(false);
         options.setPowerReportEnabled(false);
-        Libbox.setup(options);
+        try {
+            Libbox.setup(options);
+        } catch (Exception e) {
+            throw new IllegalStateException("engine setup failed: " + e.getMessage(), e);
+        }
         coreSetup = true;
     }
 
@@ -242,7 +246,7 @@ public class EngineVpnService extends VpnService implements PlatformInterface,
     // ------------------------------------------------------------------ PlatformInterface: TUN
 
     @Override
-    public int openTun(TunOptions options) {
+    public int openTun(TunOptions options) throws Exception {
         if (VpnService.prepare(this) != null) {
             throw new IllegalStateException("android: missing vpn permission");
         }
