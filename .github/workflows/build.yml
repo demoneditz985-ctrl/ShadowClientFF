@@ -69,12 +69,12 @@ jobs:
           git pull --rebase --autostash || true
           git push || true
 
-      - name: Publish "latest" release
-        if: github.ref == 'refs/heads/main'
+      - name: Publish "latest" release (direct download link)
+        if: success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete latest --yes --cleanup-tag || true
           gh release create latest app/build/outputs/apk/release/*.apk \
             --title "Shadow Client — latest build" \
-            --notes "Auto-built from ${GITHUB_SHA} · Android 9+ (arm64-v8a, armeabi-v7a, x86_64)"
+            --notes "Auto-built from ${GITHUB_SHA} · Shadow Client v1.0.0 · Android 9+ · owner key: SHADOWCLIENT"
