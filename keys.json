@@ -1,0 +1,11 @@
+{
+  "keys": {
+    "SHADOWCLIENT": {
+      "label": "OWNER",
+      "expiry": "LIFETIME",
+      "max_devices": 0,
+      "devices": [],
+      "created": "2026-10-08T00:00:00.000Z"
+    }
+  }
+}

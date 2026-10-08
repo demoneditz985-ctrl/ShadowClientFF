@@ -80,28 +80,32 @@ public final class KeyManager {
         }
         IO.execute(() -> {
             KeyInfo info = null;
-            int code;
+            boolean offlineGrant = false;
 
             if (!TextUtils.isEmpty(Config.KEY_API_URL)) {
                 info = remote(app, key);
                 if (info == null) {
-                    // server unreachable -> allow a previously activated key inside the grace window
                     if (hasRecentLocalGrant(app, key)) {
-                        code = ERR_OK;
+                        offlineGrant = true;
                     } else {
                         post(cb, ERR_OFFLINE, null, 0L);
                         return;
                     }
                 }
-            }
-
-            if (info == null && code != ERR_OK) {
+            } else {
                 info = local(app, key);
                 if (info == null) {
                     post(cb, ERR_INVALID, null, 0L);
                     return;
                 }
-                code = ERR_OK;
+            }
+
+            if (info == null) {
+                // key server unreachable, but this device already activated the same key recently
+                Prefs.setNum(app, Prefs.KEY_LAST_CHECK, System.currentTimeMillis());
+                post(cb, ERR_OK, Prefs.str(app, Prefs.KEY_LABEL, "KEY"),
+                        Prefs.num(app, Prefs.KEY_EXPIRY, 0L));
+                return;
             }
 
             if (info.expiry > 0 && info.expiry < System.currentTimeMillis()) {
@@ -201,7 +205,6 @@ public final class KeyManager {
     }
 
     private static void save(Context c, String key, KeyInfo info) {
-        Prefs.set(c, Prefs.KEY_ACTIVE, "x");
         Prefs.setFlag(c, Prefs.KEY_ACTIVE, true);
         Prefs.set(c, Prefs.KEY_VALUE, key);
         Prefs.set(c, Prefs.KEY_LABEL, info.label);

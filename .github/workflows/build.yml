@@ -33,7 +33,19 @@ jobs:
           ls "$ANDROID_HOME/platforms"
 
       - name: Build release APK
-        run: gradle assembleRelease --no-daemon --stacktrace
+        run: |
+          set -o pipefail
+          gradle assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log
+
+      - name: Publish build errors back to the branch
+        if: failure()
+        run: |
+          tail -n 500 build.log > CI-BUILD-ERROR.txt || true
+          git config user.name "shadow-ci"
+          git config user.email "shadow-ci@users.noreply.github.com"
+          git add -f CI-BUILD-ERROR.txt
+          git commit -m "ci: build error log [skip ci]" || true
+          git push || true
 
       - name: List outputs
         run: find app/build/outputs -type f | sort
