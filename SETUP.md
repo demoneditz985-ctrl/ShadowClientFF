@@ -1,6 +1,6 @@
 # Shadow Client — setup guide
 
-Everything below takes minutes and needs no Android Studio.
+Everything below needs no Android Studio.
 
 ---
 
@@ -11,10 +11,12 @@ Everything below takes minutes and needs no Android Studio.
 | Dark black + neon violet theme, your logo everywhere | ✅ finished |
 | Splash → key screen → dashboard flow | ✅ finished |
 | Key system (`SHADOWCLIENT` + local list + optional key server) | ✅ finished |
-| Floating icon (your logo), draggable, tap to open, × to hide | ✅ finished |
-| Node list with real TCP ping, select game (FF / FF MAX) | ✅ finished |
+| Floating **menu** — tap the logo in-game → node + ping, OPEN FREE FIRE / FF MAX, dashboard, Telegram, hide | ✅ finished |
+| OPEN FREE FIRE / FREE FIRE MAX buttons (dashboard + floating menu) | ✅ finished |
+| Node list with real TCP ping, node credentials (VLESS/VMess/Trojan/SS/Hysteria2) | ✅ finished |
 | Telegram community button → your invite link | ✅ finished |
-| Tunnel engine (the actual proxying/VPN part) | ⛔ **not included** — see §5 |
+| **Tunnel engine — official sing-box core** | ✅ **bundled** (see §5) |
+| A node to connect through | ⚠️ **yours to add** — the engine needs a server to dial |
 
 No WhatsApp branding, links or icons exist anywhere in this project, by design.
 
@@ -22,18 +24,23 @@ No WhatsApp branding, links or icons exist anywhere in this project, by design.
 
 ## 2. Build an APK
 
-**On GitHub (already wired up).** Every push to `main` builds a signed APK and attaches it to the
+**On GitHub (already wired up).** Every push to `main` builds signed APKs and publishes them to the
 `latest` release:
 
 ```
 https://github.com/demoneditz985-ctrl/ShadowClientFF/releases/latest
 ```
 
-The workflow lives in `.github/workflows/build.yml`. You can also run it by hand:
-**Actions → Build Shadow Client APK → Run workflow**.
+Two files are produced — pick one:
 
-**On your own machine.** `gradle assembleRelease` (JDK 17, Android SDK 35). The APK lands in
-`app/build/outputs/apk/release/`.
+| File | Install it on |
+|---|---|
+| `ShadowClient-1.1.0-arm64.apk` | any phone from ~2018 onwards (**use this first**) |
+| `ShadowClient-1.1.0-arm32.apk` | only if the arm64 APK refuses to install (old 32-bit device) |
+
+The APKs are large (~85 MB) because the sing-box core is a native engine per architecture.
+
+**On your own machine.** `gradle assembleRelease` (JDK 17, Android SDK 35).
 
 ### Signing
 
@@ -45,75 +52,23 @@ The release keystore is committed at `keystore/shadowclient.jks`:
 | store / key password | `shadowclient2026` |
 
 **Keep this file safe.** Android identifies an app by its signing key: if you lose it you can no
-longer update an installed copy of Shadow Client — users would have to uninstall first. To change
-the password without editing files, set `SC_STORE_PASSWORD`, `SC_KEY_PASSWORD`, `SC_KEY_ALIAS`
-as environment variables (or GitHub secrets) before building.
+longer update an installed copy. Override with `SC_STORE_PASSWORD`, `SC_KEY_PASSWORD`,
+`SC_KEY_ALIAS` env vars / GitHub secrets if you want different credentials.
 
 ---
 
 ## 3. Keys
 
-### Offline mode (default)
+👉 **Full walkthrough: [HOW-TO-GENERATE-KEYS.md](HOW-TO-GENERATE-KEYS.md)**
 
-`Config.KEY_API_URL` is empty, so the app validates on its own:
+Short version:
 
-* **`SHADOWCLIENT`** — the owner key, built in. Never expires, no device lock. Anyone who types it
-  gets in.
-* Any extra keys you list in `app/src/main/assets/keys.txt`:
-
-  ```
-  SC-BETA-0001|BetaTester|2027-01-31|1
-  SC-VIP-0002|VIP-Aman|LIFETIME|1
-  SC-RESELL-10|Reseller-10slots|LIFETIME|10
-  ```
-
-  `KEY|LABEL|EXPIRY|MAX_DEVICES` — expiry is `LIFETIME` or `yyyy-MM-dd`, devices `1` locks the key
-  to the first phone that uses it, `0` means unlimited.
-
-Honest caveat: an offline check lives inside the APK and a determined person can extract it.
-Changing the key list also requires shipping a new APK.
-
-### Server mode (recommended)
-
-Run your own key server — `server/key-server.js`, zero dependencies:
-
-```bash
-SC_TOKEN=my-app-secret ADMIN_TOKEN=my-admin-secret node server/key-server.js
-```
-
-Deploy it anywhere Node runs (Render, Railway, Fly.io, a VPS, Cloudflare Workers with small
-changes). Then point the app at it in
-`app/src/main/java/com/shadowclient/ff/Config.java`:
-
-```java
-public static String KEY_API_URL   = "https://your-host/validate";
-public static String KEY_API_TOKEN = "my-app-secret";
-```
-
-Rebuild once and from then on you control keys remotely:
-
-```bash
-# create a key for a buyer
-curl -X POST https://your-host/admin/keys \
-  -H "Authorization: Bearer my-admin-secret" \
-  -H "Content-Type: application/json" \
-  -d '{"label":"Aman","expiry":"2027-01-31","max_devices":1}'
-
-# list every key
-curl https://your-host/admin/keys -H "Authorization: Bearer my-admin-secret"
-
-# revoke instantly (the key stops working on the next check)
-curl -X DELETE https://your-host/admin/keys/SC-AB12-CD34-EF56 \
-  -H "Authorization: Bearer my-admin-secret"
-
-# buyer changed phones
-curl -X POST https://your-host/admin/reset-device \
-  -H "Authorization: Bearer my-admin-secret" \
-  -H "Content-Type: application/json" -d '{"key":"SC-AB12-CD34-EF56"}'
-```
-
-If the server is unreachable, a key that was already activated keeps working for 3 days
-(`Config.OFFLINE_GRACE_MS`) so users are not locked out by a hiccup.
+* **`SHADOWCLIENT`** — the owner key, built into the app. Never expires, no device lock.
+* **Offline keys** — `node tools/keygen.js --n 10 --label VIP --expiry 2027-12-31 --write`
+  appends them to `app/src/main/assets/keys.txt`; rebuild to activate them.
+* **Server keys (recommended)** — run `server/key-server.js`, set `Config.KEY_API_URL`, then create
+  keys any time with `node tools/keygen.js --server https://your-host --admin TOKEN --n 10`.
+  Revocable, expiry-controlled, device-locked, no rebuilds.
 
 ---
 
@@ -121,37 +76,87 @@ If the server is unreachable, a key that was already activated keeps working for
 
 | What | Where |
 |---|---|
-| App name shown by the launcher | `app/src/main/res/values/strings.xml` → `app_name` |
-| Package id (`com.shadowclient.ff`) | `app/build.gradle` → `applicationId` + `namespace`, and the Java package folders |
-| Logo used in-app | `app/src/main/res/drawable-nodpi/logo_shadow.png` (and `logo_shadow_round.png`) |
-| Launcher icon | regenerate from a new master image: see `artwork/` and the script note below |
-| Floating icon | `app/src/main/res/drawable-nodpi/ic_overlay_icon.png` |
+| App name | `app/src/main/res/values/strings.xml` → `app_name` |
+| Package id (`com.shadowclient.ff`) | `app/build.gradle` + the Java package folders |
+| Logo in-app | `app/src/main/res/drawable-nodpi/logo_shadow.png` |
+| Launcher icon | regenerate: `python3 tools/make_icons.py artwork/shadow_logo_master.png` |
+| Floating menu icon | `app/src/main/res/drawable-nodpi/ic_overlay_icon.png` |
 | Telegram link | `Config.TELEGRAM_URL` |
-| Brand string in notification/status | `Config.BRAND` |
-
-To rebuild every icon size from a new square master image (`artwork/shadow_logo_master.png`):
-
-```bash
-pip install Pillow
-python3 tools/make_icons.py artwork/shadow_logo_master.png
-```
+| Free Fire package names | `util/GameLauncher.java` (`com.dts.freefireth`, `com.dts.freefiremax`) |
 
 ---
 
-## 5. Engine plug-in point
+## 5. The tunnel engine (sing-box)
 
-`app/src/main/java/com/shadowclient/ff/core/ShadowEngine.java` is the single place where a tunnel
-engine is registered. Until one is installed, the dashboard honestly reports
-`ENGINE NOT INSTALLED` and the module button explains this instead of pretending to connect.
+`app/libs/libbox.aar` is the **official sing-box Android core**, built from upstream source
+(`SagerNet/sing-box` v1.14.2, `make lib_android`) by
+`.github/workflows/engine-libbox.yml` for arm64-v8a + armeabi-v7a. It is open source (GPL-3.0) and
+is the same engine family the old APK used — obtained legally and maintained upstream.
 
-Two common ways to finish it:
+* The engine source lives in `app/src/engineSingbox/` and is only compiled when
+  `app/libs/libbox.aar` exists, so the app always builds with or without it.
+* `EngineInstaller` finds it at startup and hands it to `ShadowEngine`; the dashboard's
+  **ACTIVATE MODULE** button then asks Android for VPN permission and starts a real tunnel.
+* Only **Free Fire / Free Fire MAX** are routed through the tunnel
+  (`VpnService.addAllowedApplication`) — everything else on the phone is untouched, and the
+  engine's own sockets are protected.
 
-1. **VpnService engine** — drop in a client such as sing-box / Xray / hysteria as a native library
-   (`app/src/main/jniLibs/<abi>/`) or a Maven dependency, write a class implementing
-   `ShadowEngine.Tunnel`, and call `ShadowEngine.install(...)` from `ShadowApp.onCreate()`.
-   The node list, ping readout and floating icon already feed it.
-2. **Your own native library** — if you have the `.so` from your previous build, add it under
-   `app/src/main/jniLibs/arm64-v8a/` (plus `armeabi-v7a` if you want 32-bit support) and call it
-   over JNI from the same `Tunnel` implementation.
+### ⚠️ You still need your own node
 
-`khm` — Android 9+ (`minSdk 28`), `targetSdk 35`, ABIs `arm64-v8a`, `armeabi-v7a`, `x86_64`.
+An engine with no server connects to nothing. Get a node and paste its details into
+**ADD SERVER** in the dashboard:
+
+| Field | Example |
+|---|---|
+| Protocol | VLESS / VMess / Trojan / Shadowsocks / Hysteria2 |
+| Host | `node.example.com` or an IP |
+| Port | `443` |
+| UUID / Password | what your provider gave you |
+| SNI / TLS name | usually the same as the host (optional) |
+| Obfs password | Hysteria2 only (optional) |
+
+Tip: the two `PING TEST` rows are only there so you can see live ping — they are not real nodes
+and the app tells you so if you try to connect through them. Long-press a row to delete it.
+
+### Licensing note
+
+sing-box is GPL-3.0. If you distribute Shadow Client publicly, publish the corresponding source
+for the engine (your repo already is the source) or make the app's own source available — the
+simplest option is keeping this repository public, which it already is.
+
+---
+
+## 6. If the VPN does not connect
+
+1. **Did you add a real node?** Demo rows never connect.
+2. **Did you grant the VPN request?** The first tap shows Android's "Connection request" dialog;
+   if you tapped Cancel, tap ACTIVATE MODULE again.
+3. **Is the node alive?** A red `TIMEOUT` in the ping column means the host does not answer on that
+   port at all.
+4. **Credentials wrong?** Wrong UUID/password shows `ERROR` with the engine's message in the
+   status line.
+5. **Battery optimisation** — some phones kill background services; allow Shadow Client to run in
+   the background (the app offers the setting on first run).
+6. **Send me the status line text** — it is the engine's own message and tells us exactly what
+   failed.
+
+---
+
+## 7. Where everything lives
+
+```
+app/src/main/java/com/shadowclient/ff/
+  auth/KeyManager.java              key validation, device binding, sessions
+  core/NodeConfig.java              node model + sing-box config generation
+  core/ServerRepo.java              node list + real TCP ping
+  core/ShadowEngine.java            engine plug-in point
+  engine/EngineInstaller.java       loads the bundled engine
+  overlay/FloatingIconService.java  the floating logo + in-game menu
+  ui/                               Splash, Login, Dashboard, particle background
+app/src/engineSingbox/…             sing-box platform glue (VpnService)
+tools/keygen.js                     key generator (offline + server)
+tools/make_icons.py                 rebuild all icon sizes from one master image
+server/key-server.js                key server (issue / revoke / reset devices)
+.github/workflows/build.yml         builds + publishes the APKs
+.github/workflows/engine-libbox.yml builds the sing-box core
+```
