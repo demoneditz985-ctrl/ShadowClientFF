@@ -1,0 +1,84 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.shadowclient.ff'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.shadowclient.ff"
+        minSdk 28          // Android 9 (Pie) and up
+        targetSdk 35       // runs on Android 9 .. Android 16/17
+        versionCode 2
+        versionName "1.1.0"
+        resConfigs "en"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    signingConfigs {
+        release {
+            storeFile rootProject.file('keystore/shadowclient.jks')
+            storePassword System.getenv('SC_STORE_PASSWORD') ?: 'shadowclient2026'
+            keyAlias System.getenv('SC_KEY_ALIAS') ?: 'shadowclient'
+            keyPassword System.getenv('SC_KEY_PASSWORD') ?: 'shadowclient2026'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // one APK per architecture: the sing-box core is ~80 MB per ABI
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a', 'armeabi-v7a'
+            universalApk false
+        }
+    }
+
+    packaging {
+        resources.excludes += ['META-INF/*.kotlin_module', 'DebugProbesKt.bin', 'kotlin/**']
+    }
+
+    // The sing-box engine source set is only compiled when the AAR is present, so the app
+    // always builds — with or without an engine (see SETUP.md §5).
+    sourceSets {
+        main {
+            if (rootProject.file('app/libs/libbox.aar').exists()) {
+                java.srcDirs += 'src/engineSingbox/java'
+            }
+        }
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+
+    // sing-box core (GPL-3.0) — present only when app/libs/libbox.aar exists.
+    def libbox = rootProject.file('app/libs/libbox.aar')
+    if (libbox.exists()) {
+        implementation files(libbox)
+    }
+}

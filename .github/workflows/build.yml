@@ -1,0 +1,78 @@
+name: Build Shadow Client APK
+
+on:
+  push:
+    branches: [ main, arena/cf219043-shadowclientff ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Show toolchain
+        run: |
+          java -version
+          gradle --version
+          ls "$ANDROID_HOME/platforms"
+
+      - name: Build release APK
+        run: |
+          set -o pipefail
+          gradle assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log
+
+      - name: Publish build errors back to the branch
+        if: failure()
+        run: |
+          tail -n 500 build.log > CI-BUILD-ERROR.txt || true
+          git config user.name "shadow-ci"
+          git config user.email "shadow-ci@users.noreply.github.com"
+          git add -f CI-BUILD-ERROR.txt
+          git commit -m "ci: build error log [skip ci]" || true
+          git push || true
+
+      - name: List outputs
+        run: find app/build/outputs -type f | sort
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadow-client-apk
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+
+      - name: Name the APKs clearly
+        if: success()
+        run: |
+          mkdir -p out
+          cp app/build/outputs/apk/release/app-arm64-v8a-release.apk   out/ShadowClient-1.1.0-arm64.apk   || true
+          cp app/build/outputs/apk/release/app-armeabi-v7a-release.apk out/ShadowClient-1.1.0-arm32.apk   || true
+          ls -la out/
+
+      - name: Publish "latest" release (direct download link)
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest out/*.apk \
+            --title "Shadow Client 1.1.0 — latest build" \
+            --notes "Android 9+ · owner key: **SHADOWCLIENT**" \
+            --notes "**Which file?** Install **arm64** on any phone from ~2018 onwards. Use **arm32** only if the arm64 APK refuses to install (very old 32-bit device)." \
+            --notes "New: floating menu (tap the logo in-game), OPEN FREE FIRE buttons, sing-box engine included, key generator in tools/."

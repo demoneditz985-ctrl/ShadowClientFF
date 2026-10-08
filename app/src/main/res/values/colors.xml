@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shadow Client :: DARK BLACK theme -->
+    <color name="sc_black">#FF000000</color>
+    <color name="sc_bg">#FF050409</color>
+    <color name="sc_surface">#FF0A0810</color>
+    <color name="sc_surface_2">#FF110C1B</color>
+    <color name="sc_stroke">#FF2A1C40</color>
+    <color name="sc_stroke_soft">#FF1A1128</color>
+
+    <color name="sc_violet">#FFA855F7</color>
+    <color name="sc_violet_bright">#FFC98BFF</color>
+    <color name="sc_violet_deep">#FF6D28D9</color>
+    <color name="sc_magenta">#FFE040FB</color>
+
+    <color name="sc_text">#FFF6F3FF</color>
+    <color name="sc_text_dim">#FFA79FB8</color>
+    <color name="sc_text_faint">#FF6B6379</color>
+
+    <color name="sc_success">#FF3DDC97</color>
+    <color name="sc_danger">#FFFF5A6E</color>
+    <color name="sc_warning">#FFFFC24B</color>
+
+    <color name="sc_tg_blue">#FF2AABEE</color>
+
+    <color name="ic_launcher_background">#FF000000</color>
+    <color name="sc_transparent">#00000000</color>
+</resources>

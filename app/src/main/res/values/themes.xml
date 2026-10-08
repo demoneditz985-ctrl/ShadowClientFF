@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.ShadowClient" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/sc_violet</item>
+        <item name="colorOnPrimary">@color/sc_black</item>
+        <item name="colorPrimaryContainer">@color/sc_violet_deep</item>
+        <item name="colorSecondary">@color/sc_magenta</item>
+        <item name="colorSurface">@color/sc_surface</item>
+        <item name="colorOnSurface">@color/sc_text</item>
+        <item name="colorOnSurfaceVariant">@color/sc_text_dim</item>
+        <item name="android:colorBackground">@color/sc_black</item>
+        <item name="colorOutline">@color/sc_stroke</item>
+        <item name="colorError">@color/sc_danger</item>
+
+        <item name="android:windowBackground">@color/sc_black</item>
+        <item name="android:statusBarColor">@color/sc_black</item>
+        <item name="android:navigationBarColor">@color/sc_black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:textColorPrimary">@color/sc_text</item>
+        <item name="android:textColorSecondary">@color/sc_text_dim</item>
+        <item name="android:textColorHint">@color/sc_text_faint</item>
+        <item name="materialAlertDialogTheme">@style/Theme.ShadowClient.Dialog</item>
+    </style>
+
+    <style name="Theme.ShadowClient.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/sc_surface_2</item>
+        <item name="colorOnSurface">@color/sc_text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/ShadowDialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/ShadowDialogButton</item>
+    </style>
+
+    <style name="ShadowDialogButton" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/sc_violet_bright</item>
+    </style>
+
+    <style name="ShadowTitle">
+        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.14</item>
+    </style>
+
+    <style name="ShadowLabel">
+        <item name="android:textColor">@color/sc_text_dim</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.22</item>
+    </style>
+
+    <style name="ShadowValue">
+        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">monospace</item>
+    </style>
+
+    <style name="ShadowButton" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/sc_black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">54dp</item>
+        <item name="android:background">@drawable/bg_button_primary</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="ShadowButtonGhost" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/sc_violet_bright</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:minHeight">50dp</item>
+        <item name="android:background">@drawable/bg_button_ghost</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="ShadowMenuButton" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:background">@drawable/bg_menu_button</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="ShadowMenuButtonGhost" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/sc_danger</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:background">@drawable/bg_menu_button_ghost</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+</resources>

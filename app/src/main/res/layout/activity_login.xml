@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sc_black">
+
+    <com.shadowclient.ff.ui.ParticleView
+        android:id="@+id/particle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="56dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="32dp">
+
+            <FrameLayout
+                android:layout_width="132dp"
+                android:layout_height="132dp">
+
+                <View
+                    android:layout_width="196dp"
+                    android:layout_height="196dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_glow" />
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="124dp"
+                    android:layout_height="124dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/logo_shadow_round" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tvBrand"
+                style="@style/ShadowTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:letterSpacing="0.3"
+                android:text="@string/brand_upper"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/tvSub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/login_sub"
+                android:textColor="@color/sc_text_dim"
+                android:textSize="12sp" />
+
+            <!-- key card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:id="@+id/labelKey"
+                    style="@style/ShadowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_title" />
+
+                <EditText
+                    android:id="@+id/etKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints=""
+                    android:background="@drawable/bg_input"
+                    android:fontFamily="monospace"
+                    android:hint="@string/login_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapCharacters|textNoSuggestions"
+                    android:letterSpacing="0.18"
+                    android:maxLines="1"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:singleLine="true"
+                    android:textColor="@color/sc_text"
+                    android:textColorHint="@color/sc_text_faint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swRemember"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:checked="true"
+                    android:text="@string/login_remember"
+                    android:textColor="@color/sc_text_dim"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnActivate"
+                    style="@style/ShadowButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/login_button" />
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:minHeight="18dp"
+                    android:textColor="@color/sc_violet_bright"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tvWhere"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:text="@string/login_where"
+                    android:textColor="@color/sc_text_faint"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- official channels : Telegram only -->
+            <TextView
+                android:id="@+id/labelChannels"
+                style="@style/ShadowLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/channels_title" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnTelegram"
+                style="@style/ShadowButtonGhost"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:drawableStart="@drawable/ic_telegram"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/sc_tg_blue"
+                android:text="@string/telegram_join" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:alpha="0.6"
+                android:text="@string/app_tagline"
+                android:textColor="@color/sc_text_faint"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

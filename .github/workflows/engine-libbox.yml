@@ -1,0 +1,99 @@
+name: Build sing-box engine (libbox.aar)
+
+# Builds the official open-source sing-box Android core and commits it into app/libs/.
+# Same engine family the old APK used — but obtained legally, maintained upstream, and
+# driven entirely by YOUR node config. Runs once; afterwards the AAR is in the repo.
+
+on:
+  push:
+    paths:
+      - '.github/workflows/engine-libbox.yml'
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'gomobile bind target'
+        default: 'android/arm64,android/arm'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  libbox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: arena/cf219043-shadowclientff
+
+      - name: Already built?
+        id: check
+        run: |
+          if [ -f app/libs/libbox.aar ]; then
+            echo "exists=yes" >> "$GITHUB_OUTPUT"
+            echo "libbox.aar already in repo — nothing to do."
+          else
+            echo "exists=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up JDK 17
+        if: steps.check.outputs.exists == 'no'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Go
+        if: steps.check.outputs.exists == 'no'
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.x'
+          cache: false
+
+      - name: Clone sing-box
+        if: steps.check.outputs.exists == 'no'
+        run: git clone --depth 1 --branch v1.14.2 https://github.com/SagerNet/sing-box.git "$RUNNER_TEMP/sing-box"
+
+      - name: Install gomobile
+        if: steps.check.outputs.exists == 'no'
+        run: |
+          go install -v github.com/sagernet/gomobile/cmd/gomobile@v0.1.13
+          go install -v github.com/sagernet/gomobile/cmd/gobind@v0.1.13
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Environment
+        if: steps.check.outputs.exists == 'no'
+        run: |
+          echo "ANDROID_NDK_HOME=${ANDROID_NDK_LATEST_HOME}" >> "$GITHUB_ENV"
+          echo "ANDROID_HOME=${ANDROID_HOME}" >> "$GITHUB_ENV"
+          echo "NDK: ${ANDROID_NDK_LATEST_HOME}"
+          ls "${ANDROID_NDK_LATEST_HOME}" | head -5
+
+      - name: Build libbox.aar
+        if: steps.check.outputs.exists == 'no'
+        working-directory: ${{ runner.temp }}/sing-box
+        run: |
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          gomobile init || true
+          go run ./cmd/internal/build_libbox -target android -platform "${{ github.event.inputs.platform || 'android/arm64,android/arm' }}"
+          ls -la ./*.aar
+
+      - name: Commit engine into the repo
+        if: steps.check.outputs.exists == 'no'
+        run: |
+          mkdir -p app/libs
+          cp "$RUNNER_TEMP"/sing-box/libbox.aar app/libs/libbox.aar
+          ls -la app/libs/
+          git config user.name "shadow-ci"
+          git config user.email "shadow-ci@users.noreply.github.com"
+          git add -f app/libs/libbox.aar
+          git commit -m "engine: add official sing-box libbox.aar (open source core) [skip ci]"
+          git pull --rebase --autostash || true
+          git push
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "### Engine ready" >> "$GITHUB_STEP_SUMMARY"
+          du -h app/libs/libbox.aar 2>/dev/null || echo "AAR was already present"

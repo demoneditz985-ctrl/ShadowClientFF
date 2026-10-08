@@ -1,0 +1,12 @@
+# Build output
+.gradle/
+build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+*.iml
+.idea/
+# keep the signed release keystore — this repo is the app's home
+# keystore/*.jks

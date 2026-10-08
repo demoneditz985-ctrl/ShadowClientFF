@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overlayRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- ==================== collapsed state: just the logo ==================== -->
+    <ImageView
+        android:id="@+id/overlayIcon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:alpha="0.9"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_overlay_icon" />
+
+    <!-- ==================== expanded state: the menu panel ==================== -->
+    <LinearLayout
+        android:id="@+id/overlayPanel"
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_overlay_panel"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:visibility="gone">
+
+        <!-- header (drag handle) -->
+        <LinearLayout
+            android:id="@+id/panelHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/logo_shadow_round" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.14"
+                    android:text="@string/brand_upper"
+                    android:textColor="@color/sc_text"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/panelStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dash_status_offline"
+                    android:textColor="@color/sc_violet_bright"
+                    android:textSize="9sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/panelCollapse"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:background="@drawable/bg_circle_soft"
+                android:contentDescription="@string/close"
+                android:padding="5dp"
+                android:src="@drawable/ic_close"
+                android:tint="@color/sc_danger" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/sc_stroke_soft" />
+
+        <!-- node + ping -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ShadowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dash_select_server" />
+
+                <TextView
+                    android:id="@+id/panelServer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="middle"
+                    android:fontFamily="monospace"
+                    android:maxLines="1"
+                    android:text="—"
+                    android:textColor="@color/sc_text"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/panelPing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text="@string/dash_latency_idle"
+                android:textColor="@color/sc_violet_bright"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- game buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnLaunchFF"
+                style="@style/ShadowMenuButton"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:text="@string/menu_open_ff" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnLaunchFFMax"
+                style="@style/ShadowMenuButton"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="@string/menu_open_ffmax" />
+        </LinearLayout>
+
+        <!-- app buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDashboard"
+                style="@style/ShadowMenuButton"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="@string/menu_dashboard" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnTelegram"
+                style="@style/ShadowMenuButton"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_telegram"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/sc_tg_blue"
+                android:text="@string/menu_telegram" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnHideIcon"
+            style="@style/ShadowMenuButtonGhost"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/menu_hide" />
+
+        <TextView
+            android:id="@+id/panelNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:alpha="0.75"
+            android:gravity="center"
+            android:text="@string/menu_note"
+            android:textColor="@color/sc_text_faint"
+            android:textSize="9sp" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Shadow Client</string>
+    <string name="app_tagline">Free Fire · Shadow Proxy Network</string>
+    <string name="brand_upper">SHADOW CLIENT</string>
+
+    <!-- Login -->
+    <string name="login_title">ACCESS KEY</string>
+    <string name="login_sub">Enter your Shadow Client key to continue</string>
+    <string name="login_hint">SHADOWCLIENT</string>
+    <string name="login_button">ACTIVATE</string>
+    <string name="login_verifying">Verifying key…</string>
+    <string name="login_success">Key accepted. Welcome to Shadow Client.</string>
+    <string name="login_empty">Please enter your access key.</string>
+    <string name="login_invalid">Invalid key. Check it and try again.</string>
+    <string name="login_expired">This key has expired.</string>
+    <string name="login_device_limit">This key is already bound to another device.</string>
+    <string name="login_offline">Can\u2019t reach the key server. Check your connection.</string>
+    <string name="login_where">Don\u2019t have a key? Get one on our Telegram.</string>
+    <string name="login_remember">Keep me signed in on this device</string>
+    <string name="login_device_bound">Bound to this device</string>
+
+    <!-- Channels -->
+    <string name="channels_title">OFFICIAL CHANNELS</string>
+    <string name="telegram">Telegram</string>
+    <string name="telegram_join">JOIN TELEGRAM COMMUNITY</string>
+    <string name="telegram_url" translatable="false">https://t.me/+BBimnHMiSvpiYTBl</string>
+
+    <!-- Dashboard -->
+    <string name="dash_active_module">ACTIVE MODULE</string>
+    <string name="dash_status_offline">OFFLINE</string>
+    <string name="dash_status_ready">READY</string>
+    <string name="dash_status_running">RUNNING</string>
+    <string name="dash_select_game">SELECT GAME</string>
+    <string name="dash_select_server">SELECT SERVER</string>
+    <string name="dash_ping">PING</string>
+    <string name="dash_latency_idle">-- ms</string>
+    <string name="dash_floating_icon">FLOATING ICON</string>
+    <string name="dash_connect">ACTIVATE MODULE</string>
+    <string name="dash_disconnect">DEACTIVATE MODULE</string>
+    <string name="dash_engine_note">Engine placeholder — plug in your own tunnel engine (see SETUP.md). UI, key system and overlay are live.</string>
+    <string name="dash_account">ACCOUNT</string>
+    <string name="dash_key_label">KEY</string>
+    <string name="dash_activated">ACTIVATED</string>
+    <string name="dash_expiry">EXPIRES</string>
+    <string name="dash_lifetime">LIFETIME</string>
+    <string name="dash_logout">SIGN OUT</string>
+    <string name="ff">Free Fire</string>
+    <string name="ffmax">Free Fire MAX</string>
+
+    <!-- Overlay -->
+    <string name="overlay_channel">Shadow Client overlay</string>
+    <string name="overlay_started">Floating icon enabled</string>
+    <string name="overlay_stopped">Floating icon disabled</string>
+
+    <!-- Permission -->
+    <string name="perm_overlay_title">Overlay permission required</string>
+    <string name="perm_overlay_msg">Allow Shadow Client to display the floating icon on top of other apps.</string>
+    <string name="perm_notif_title">Notifications</string>
+    <string name="perm_notif_msg">Allow notifications so the floating icon service can run reliably.</string>
+    <string name="grant">GRANT</string>
+    <string name="cancel">CANCEL</string>
+    <string name="ok">OK</string>
+    <string name="close">CLOSE</string>
+    <string name="sign_out_title">Sign out?</string>
+    <string name="sign_out_msg">Your key stays on this device until you sign out. The floating icon will be turned off.</string>
+
+    <!-- Floating menu -->
+    <string name="menu_open_ff">FREE FIRE</string>
+    <string name="menu_open_ffmax">FF MAX</string>
+    <string name="menu_dashboard">DASHBOARD</string>
+    <string name="menu_telegram">TELEGRAM</string>
+    <string name="menu_hide">HIDE FLOATING ICON</string>
+    <string name="menu_note">Tap logo to open · drag to move</string>
+    <string name="dash_launch_ff">OPEN FREE FIRE</string>
+    <string name="dash_launch_ffmax">OPEN FREE FIRE MAX</string>
+    <string name="launch_not_installed">%s is not installed — opening the store page.</string>
+    <string name="node_dialog_hint">Paste the details of YOUR node (from your provider or your own server). Long-press a node in the list to delete it.</string>
+    <string name="node_id_uuid">UUID (VLESS / VMess)</string>
+    <string name="node_id_password">Password (Trojan / Hysteria2)</string>
+    <string name="node_id_ss">Password (Shadowsocks)</string>
+    <string name="node_add_title">Add your node</string>
+</resources>
