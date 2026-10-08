@@ -1,7 +1,9 @@
 name: probe
-on: workflow_dispatch
+on:
+  push:
+    branches: [ arena/cf219043-shadowclientff ]
 jobs:
   p:
     runs-on: ubuntu-latest
     steps:
-      - run: echo hello
+      - run: echo "runner-up" && $ANDROID_HOME/build-tools/35.0.0/aapt2 version && $ANDROID_HOME/build-tools/35.0.0/d8 --version && ls $ANDROID_HOME/platforms
