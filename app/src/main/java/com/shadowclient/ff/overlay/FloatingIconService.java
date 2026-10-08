@@ -167,13 +167,14 @@ public class FloatingIconService extends Service {
         lp.x = (int) Prefs.num(this, Prefs.KEY_OVERLAY_X, 40);
         lp.y = (int) Prefs.num(this, Prefs.KEY_OVERLAY_Y, 220);
 
-        // collapsed icon: tap to open the menu, drag to move
-        icon.setOnClickListener(v -> togglePanel());
-        icon.setOnTouchListener(new DragListener());
+        // collapsed icon: tap to open the menu, drag to move.
+        // NOTE: the touch listener consumes the gesture, so the tap is handled inside it —
+        // a plain setOnClickListener would never fire (that was the "logo does nothing" bug).
+        icon.setOnTouchListener(new DragListener(this::togglePanel));
 
-        // menu header: drag handle
+        // menu header: drag handle, tapping it does nothing
         View header = root.findViewById(R.id.panelHeader);
-        header.setOnTouchListener(new DragListener());
+        header.setOnTouchListener(new DragListener(null));
 
         root.findViewById(R.id.panelCollapse).setOnClickListener(v -> togglePanel());
 
@@ -280,9 +281,14 @@ public class FloatingIconService extends Service {
     // ------------------------------------------------------------------ dragging
 
     private final class DragListener implements View.OnTouchListener {
+        private final Runnable onTap;
         private int startX, startY;
         private float touchX, touchY;
         private boolean moved;
+
+        DragListener(Runnable onTap) {
+            this.onTap = onTap;
+        }
 
         @Override
         public boolean onTouch(View v, MotionEvent e) {
@@ -306,7 +312,11 @@ public class FloatingIconService extends Service {
                 case MotionEvent.ACTION_CANCEL:
                     keepOnScreen();
                     savePosition();
-                    return moved;   // a plain tap still reaches the click listener
+                    if (!moved && onTap != null) {
+                        v.performClick();   // keeps accessibility services happy
+                        onTap.run();
+                    }
+                    return true;
                 default:
                     return false;
             }
