@@ -6,21 +6,21 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeReleaseNativeLibs
 > Task :app:checkReleaseDuplicateClasses
 > Task :app:javaPreCompileRelease
-> Task :app:generateReleaseResValues
-> Task :app:checkReleaseAarMetadata
 
 > Task :app:stripReleaseDebugSymbols
 Unable to strip the following libraries, packaging them as they are: libbox.so.
 
-> Task :app:mapReleaseSourceSetPaths
-> Task :app:generateReleaseResources
+> Task :app:generateReleaseResValues
+> Task :app:checkReleaseAarMetadata
 > Task :app:extractReleaseNativeSymbolTables
+> Task :app:mapReleaseSourceSetPaths
 > Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:generateReleaseResources
 > Task :app:packageReleaseResources
-> Task :app:mergeReleaseResources
 > Task :app:createReleaseCompatibleScreenManifests
 > Task :app:extractDeepLinksRelease
 > Task :app:parseReleaseLocalResources
+> Task :app:mergeReleaseResources
 > Task :app:processReleaseMainManifest
 > Task :app:processReleaseManifest
 > Task :app:mergeReleaseStartupProfile
@@ -42,23 +42,17 @@ Unable to strip the following libraries, packaging them as they are: libbox.so.
 > Task :app:processReleaseResources
 > Task :app:desugarReleaseFileDependencies
 
-> Task :app:compileReleaseJavaWithJavac
-/home/runner/work/ShadowClientFF/ShadowClientFF/app/src/engineSingbox/java/com/shadowclient/ff/engine/singbox/EngineVpnService.java:72: error: EngineVpnService is not abstract and does not override abstract method connectSSHAgent() in CommandServerHandler
-public class EngineVpnService extends VpnService implements PlatformInterface,
-       ^
-/home/runner/work/ShadowClientFF/ShadowClientFF/app/src/engineSingbox/java/com/shadowclient/ff/engine/singbox/EngineVpnService.java:623: error: connectSSHAgent() in EngineVpnService cannot implement connectSSHAgent() in CommandServerHandler
-    public void connectSSHAgent() {
-                ^
-  return type void is not compatible with int
-/home/runner/work/ShadowClientFF/ShadowClientFF/app/src/engineSingbox/java/com/shadowclient/ff/engine/singbox/EngineVpnService.java:622: error: method does not override or implement a method from a supertype
-    @Override
-    ^
+> Task :app:compileReleaseJavaWithJavac FAILED
+/home/runner/work/ShadowClientFF/ShadowClientFF/app/src/engineSingbox/java/com/shadowclient/ff/engine/singbox/EngineVpnService.java:187: error: unreported exception Exception; must be caught or declared to be thrown
+        Libbox.setup(options);
+                    ^
+/home/runner/work/ShadowClientFF/ShadowClientFF/app/src/engineSingbox/java/com/shadowclient/ff/engine/singbox/EngineVpnService.java:270: error: unreported exception Exception; must be caught or declared to be thrown
+            StringIterator dns = options.getDNSServerAddress();
+                                                            ^
 Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-3 errors
-
-> Task :app:compileReleaseJavaWithJavac FAILED
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1791454392104.json
+2 errors
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1791454465021.json
 
 FAILURE: Build failed with an exception.
 
@@ -262,5 +256,5 @@ Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Com
 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
 
 
-BUILD FAILED in 35s
+BUILD FAILED in 48s
 33 actionable tasks: 33 executed
