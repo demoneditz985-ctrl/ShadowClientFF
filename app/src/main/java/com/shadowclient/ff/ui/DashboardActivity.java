@@ -3,6 +3,7 @@ package com.shadowclient.ff.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.VpnService;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -44,6 +45,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private static final int REQ_OVERLAY = 1001;
     private static final int REQ_NOTIF = 1002;
+    private static final int REQ_VPN = 1003;
 
     private TextView chipStatus, tvModuleGame, tvModuleServer, tvPing, tvModuleStatus;
     private TextView chipFF, chipFFMax, tvKeyMasked, tvActivated, tvExpires, tvServerCount, tvFooter;
@@ -350,13 +352,29 @@ public class DashboardActivity extends AppCompatActivity {
         if (ShadowEngine.isRunning()) {
             ShadowEngine.stop(this);
             refreshStatus();
-        } else {
-            tvModuleStatus.setText("CONNECTING…");
-            ShadowEngine.start(this, n, (state, detail) -> runOnUiThread(() -> {
-                tvModuleStatus.setText(state);
-                refreshStatus();
-            }));
+            return;
         }
+
+        // Android asks the user once per app before any tunnel may be created.
+        try {
+            Intent consent = VpnService.prepare(this);
+            if (consent != null) {
+                startActivityForResult(consent, REQ_VPN);
+                return;
+            }
+        } catch (Exception ignored) {
+        }
+        startEngine();
+    }
+
+    private void startEngine() {
+        NodeConfig n = ServerRepo.selected(this);
+        tvModuleStatus.setText("CONNECTING…");
+        ShadowEngine.start(this, n, (state, detail) -> runOnUiThread(() -> {
+            tvModuleStatus.setText(state);
+            chipStatus.setText(state);
+            refreshStatus();
+        }));
     }
 
     // ------------------------------------------------------------------ overlay
@@ -391,6 +409,16 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int code, int result, Intent data) {
         super.onActivityResult(code, result, data);
+        if (code == REQ_VPN) {
+            if (result == RESULT_OK) {
+                startEngine();
+            } else {
+                Ui.info(this, "VPN permission denied",
+                        "Android needs your permission before Shadow Client can create a tunnel. "
+                                + "Tap ACTIVATE MODULE and choose OK to allow it.");
+            }
+            return;
+        }
         if (code == REQ_OVERLAY) {
             refreshSwitch();
             if (Ui.hasOverlay(this) && Prefs.flag(this, Prefs.KEY_OVERLAY, false)) {

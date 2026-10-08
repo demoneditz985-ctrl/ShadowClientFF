@@ -61,6 +61,20 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.ShadowClient" />
 
+        <!-- present only when the sing-box engine is bundled (see SETUP.md §5) -->
+        <service
+            android:name=".engine.singbox.EngineVpnService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps the user-requested VPN tunnel to the selected node running while the game is being played." />
+        </service>
+
         <service
             android:name=".overlay.FloatingIconService"
             android:exported="false"
